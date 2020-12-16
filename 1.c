@@ -6,20 +6,20 @@
 
 int main(int argc, char *argv[])
 {
-    struct stat stat_buf;
+    struct stat stat_buffer;
     if (argc != 2)
     {
-        printf("che s argumentami leee: %s some.file\n", argv[0]);
+        printf("problems with arguments");
         return 42;
     }
 
-    if (lstat(argv[1], &stat_buf) == -1)
+    if (lstat(argv[1], &stat_buffer) == -1)
     {
-        perror("ne robit");
+        perror("lstat didn't work out");
         return 43;
     }
     printf("file type ");
-    switch (stat_buf.st_mode & S_IFMT)
+    switch (stat_buffer.st_mode & S_IFMT)
     {
     case S_IFBLK:  printf("block device\n");break;
     case S_IFCHR:  printf("character device\n");break;
@@ -31,11 +31,10 @@ int main(int argc, char *argv[])
     default: printf("unknown?\n");break;
     }
 
-    printf("mode: %06o\n", stat_buf.st_mode);
-    printf("size: %llu\n", (unsigned long long)stat_buf.st_size);
-    printf("space used: %llu\n", (unsigned long long)stat_buf.st_blocks * 512);
-    printf("last file commit:   %s", ctime(&stat_buf.st_mtime));
-
+    printf("mode: %06o\n", stat_buffer.st_mode);
+    printf("size: %llu\n", (unsigned long long)stat_buffer.st_size);
+    printf("space used: %llu\n", (unsigned long long)stat_buffer.st_blocks * 512);
+    printf("last file commit:   %s", ctime(&stat_buffer.st_mtime));
 
     return 0;
 }
