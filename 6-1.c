@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
@@ -16,27 +17,27 @@ int main(int argc, char *argv[])
      dirp = opendir(argv[1]);
      if (dirp == 0)
      {
-        perror("idi svoey dorogoi stalker");
+        perror("opendir didn't work out");
         return 42;
      }
   }
   if (argc > 2)
   {
-     printf("suetu navel...,");
+     printf("input problems");
      return 42;
   }
-  
+
   struct stat stat_buf;
   struct dirent *dir;
-  
+
   printf("Type of File: ");
   while ((dir = readdir(dirp)) != NULL)
   {
      if (dir->d_type == DT_UNKNOWN)
      {
-        if (lstat (dir->d_name, &stat_buf) == -1) 
+        if (lstat (dir->d_name, &stat_buf) == -1)
         {
-           perror("sueta...,");
+           perror("lstat didn't work out");
            return 42;
         }
         switch (stat_buf.st_mode & S_IFMT)
@@ -48,8 +49,8 @@ int main(int argc, char *argv[])
            case S_IFLNK: printf("symlink    ");break;
            case S_IFREG: printf("regular file    ");break;
            case S_IFSOCK: printf("socket    ");break;
-           default: printf("et che takoe    ");break;
-        }      
+           default: printf("error unknown    ");break;
+        }
      }
      else
      {
@@ -61,12 +62,12 @@ int main(int argc, char *argv[])
            case DT_FIFO: printf("FIFO/pipe    ");break;
            case DT_LNK: printf("symlink    ");break;
            case DT_REG: printf("regular file    ");break;
-           case DT_SOCK: printf("socket    ");break; 
+           case DT_SOCK: printf("socket    ");break;
         }
      }
      printf("Name: %s \n", dir->d_name);
   }
-  
+
   closedir(dirp);
   return 0;
 }
