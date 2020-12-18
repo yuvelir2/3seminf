@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
         perror("failed to lstat");
         return 43;
     }
-    if ((stat_buf.st_mode & S_IFMT) != S_IFREG)
+    if (!S_ISREG(stat_buf.st_mode))
     {
         printf("not regular file");
         return 44;
