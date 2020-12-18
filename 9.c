@@ -8,10 +8,10 @@ int main(int argc, char* argv[])
         printf("Usage: %s some.file\n", argv[0]);
         return 42;
     }
-    struct statfs buffer;
-    if ((statfs(argv[1], &buffer)) == -1)
+    struct statvfs buffer;
+    if ((statvfs(argv[1], &buffer)) == -1)
     {
-        perror("failed to statfs");
+        perror("failed to statvfs");
         return 42;
     }
     printf("total: %lu \n",buffer.f_blocks * buffer.f_bsize);
