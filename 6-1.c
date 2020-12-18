@@ -5,69 +5,73 @@
 #include <dirent.h>
 #include <unistd.h>
 
+const char *dir_type(__uint8_t type)
+{
+    switch (type)
+    {
+    case DT_FIFO:   return "FIFO";                  break;
+    case DT_CHR:    return "CHARACTER SPECIAL";     break;
+    case DT_DIR:    return "DIRECTORY";             break;
+    case DT_BLK:    return "BLOCK SPECIAL";         break;
+    case DT_REG:    return "REGULAR";               break;
+    case DT_LNK:    return "SYMBOLIC LINK";         break;
+    case DT_SOCK:   return "SOCKET";                break;
+    case DT_WHT:    return "WHITEOUT";              break;
+    default: return "unknown?";                     break;
+    }
+}
+
+const char *is_type(mode_t file_mode)
+{
+
+    switch (file_mode & S_IFMT)
+    {
+    case S_IFBLK:  return "BLOCK SPECIAL";          break;
+    case S_IFCHR:  return "CHARACTER SPECIAL";      break;
+    case S_IFDIR:  return "DIRECTORY";              break;
+    case S_IFIFO:  return "FIFO";                   break;
+    case S_IFLNK:  return "SYMBOLIC LINK";          break;
+    case S_IFREG:  return "REGULAR";                break;
+    case S_IFSOCK: return "SOCKET";                 break;
+    default:       return "unkwown?";               break;
+    }
+}
+
 int main(int argc, char *argv[])
 {
-  DIR* dirp;
-  if (argc == 1)
-  {
-     argv[1] = ".";
-  }
-  if (argc == 2)
-  {
-     dirp = opendir(argv[1]);
-     if (dirp == 0)
-     {
-        perror("opendir didn't work out");
+    if (argc > 2)
+    {
+        printf("Usage: %s [dir]", argv[1]);
         return 42;
-     }
-  }
-  if (argc > 2)
-  {
-     printf("input problems");
-     return 42;
-  }
+    }
+    const char *dirp = (argc == 2) ? argv[1] : ".";
+    DIR *dir_str = opendir(dirp);
+    if (dir_str == NULL)
+    {
+        perror("failed to opendir");
+        return 43;
+    }
 
-  struct stat stat_buf;
-  struct dirent *dir;
-
-  printf("Type of File: ");
-  while ((dir = readdir(dirp)) != NULL)
-  {
-     if (dir->d_type == DT_UNKNOWN)
-     {
-        if (lstat (dir->d_name, &stat_buf) == -1)
+    struct dirent *dir;
+    struct stat stat_buf;
+    while ((dir = readdir(dir_str)) != NULL)
+    {
+        if (dir->d_type == DT_UNKNOWN)
         {
-           perror("lstat didn't work out");
-           return 42;
+            if (lstat(dir->d_name, &stat_buf) == -1)
+            {
+                perror("failed to lstat");
+                closedir(dir_str);
+                return 44;
+            }
+            printf("%-20s", is_type(stat_buf.st_mode));
         }
-        switch (stat_buf.st_mode & S_IFMT)
+        else
         {
-           case S_IFBLK: printf("block device    "); break;
-           case S_IFCHR: printf("character device    ");break;
-           case S_IFDIR: printf("directory    ");break;
-           case S_IFIFO: printf("FIFO/pipe    ");break;
-           case S_IFLNK: printf("symlink    ");break;
-           case S_IFREG: printf("regular file    ");break;
-           case S_IFSOCK: printf("socket    ");break;
-           default: printf("error unknown    ");break;
+            printf("%-20s", dir_type(dir->d_type));
         }
-     }
-     else
-     {
-        switch(dir->d_type)
-        {
-           case DT_BLK: printf("block device    ");break;
-           case DT_DIR: printf("directory    ");break;
-           case DT_CHR: printf("character device    ");break;
-           case DT_FIFO: printf("FIFO/pipe    ");break;
-           case DT_LNK: printf("symlink    ");break;
-           case DT_REG: printf("regular file    ");break;
-           case DT_SOCK: printf("socket    ");break;
-        }
-     }
-     printf("Name: %s \n", dir->d_name);
-  }
-
-  closedir(dirp);
-  return 0;
+        printf("%s\n", dir->d_name);
+    }
+    closedir(dir_str);
+    return 0;
 }
