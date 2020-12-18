@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 3)
     {
-        printf ("input problems");
+        printf("Usage: %s some.file string\n", argv[0]);
         return 42;
     }
     //R/W for user, R/O for group and others
