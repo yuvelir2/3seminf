@@ -1,14 +1,12 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #ifdef S_BLKSIZE
-#define BL_SIZE S_BLKSIZE
 #else
 #include <sys/param.h>
+#ifdef DEV_BSIZE
 #define BL_SIZE DEV_BSIZE
+#else
+#error "Impossible to determine block size"
 #endif
-
+#endif
 const char *mode_to_str(mode_t file_mode)
 {
     switch (stat_buffer.st_mode & S_IFMT)
