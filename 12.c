@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     if (!(pwd = getpwuid(getuid())))
     {
         perror("Error");
-        return 0;
+        return 42;
     }
     printf("user id: %d\n", pwd->pw_uid);
     printf("user name: %s\n", pwd->pw_name);
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     if (!(grp = getgrgid(pwd->pw_gid)))
     {
         perror("Error");
-        return 0;
+        return 43;
     }
     printf("group name: %s\n", grp->gr_name);
     return 0;
