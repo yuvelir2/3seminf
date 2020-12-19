@@ -14,7 +14,7 @@ int printinfo(void)
     struct passwd *pwd;
     if (!(pwd = getpwuid(getuid())))
     {
-        perror("petpwuid");
+        perror("failed to get pointer on user ID ");
     }
     else
     {
@@ -25,29 +25,29 @@ int printinfo(void)
     struct group *grp;
     if (!(grp = getgrgid(pwd->pw_gid)))
     {
-        perror("getgrgid");
+        perror("failed to get pointer on group id");
     } else
     {
         printf("group name: %s\n", grp->gr_name);
     }
-    return 1;
+    return 42;
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
     pid_t child_id = fork();
     switch (child_id)
     {
         case -1:
-            perror("fork");
-            return 1;
+            perror("failed to fork");
+            return 43;
         case 0:
-            printf("child:\n");
+            printf("child: \n");
             printinfo();
             return 0;
         default:
             wait(NULL);
-            printf("parent:\n");
+            printf("parent: \n");
             printinfo();
             return 0;
     }
