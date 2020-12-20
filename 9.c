@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <sys/vfs.h>
+#include <sys/statvfs.h>
 
 int main(int argc, char* argv[])
 {
