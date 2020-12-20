@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <pwd.h>
-#include <uuid/uuid.h>
 #include <grp.h>
 #include <sys/wait.h>
 
