@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
         perror("failed to lstat");
         return 43;
     }
-    if (!S_ISREG(st_buf.st_mode))
+    if (!S_ISREG(stat_buf.st_mode))
     {
         printf("not regular source file");
         return 44;
