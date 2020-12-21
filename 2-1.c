@@ -18,18 +18,17 @@ int main(int argc, char *argv[])
         perror("failed to open");
         return 43;
     }
-    ssize_t i = 0, written, len;
-    len = strlen(argv[2]);
+    size_t len = strlen(argv[2]), i = 0;
     while (i < len)
     {
-        written = write(fd, argv[2] + i, len - i);
+        ssize_t written = write(fd, argv[2] + i, len - i);
         if (written < 0)
         {
             perror("error with writing");
             close(fd);
             return 44;
         }
-        i += written;
+        i += (size_t)written;
     }
     if (close(fd) == -1)
     {
