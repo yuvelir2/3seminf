@@ -72,6 +72,10 @@ int main(int argc, char *argv[])
         }
         printf("%-20s %s\n", type_str, dir->d_name);
     }
-    closedir(dir_str);
+    if (closedir(dir_str))
+    {
+		perror("failed to close");
+		return 45;
+	}
     return 0;
 }
