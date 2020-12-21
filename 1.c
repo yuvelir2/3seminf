@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 #ifdef S_BLKSIZE
 #define BL_SIZE S_BLKSIZE
 #else
@@ -13,14 +14,14 @@ const char *mode_to_str(mode_t file_mode)
 {
     switch (file_mode & S_IFMT)
     {
-    case S_IFBLK:  return ("block device\n");
-    case S_IFCHR:  return ("character device\n");
-    case S_IFDIR:  return ("directory\n");
-    case S_IFIFO:  return ("FIFO/pipe\n");
-    case S_IFLNK:  return ("symlink\n");
-    case S_IFREG:  return ("regular file\n");
-    case S_IFSOCK: return ("socket\n");
-    default: return ("unknown?\n");
+    case S_IFBLK:  return "block device ";
+    case S_IFCHR:  return "character device ";
+    case S_IFDIR:  return "directory";
+    case S_IFIFO:  return "FIFO/pipe ";
+    case S_IFLNK:  return "symlink ";
+    case S_IFREG:  return "regular file ";
+    case S_IFSOCK: return "socket ";
+    default: return "unknown? ";
     }
 }
 
@@ -42,6 +43,8 @@ int main(int argc, char *argv[])
     printf("mode: %06o\n", stat_buffer.st_mode);
     printf("size: %llu\n", (unsigned long long)stat_buffer.st_size);
     printf("space used: %llu\n", (unsigned long long)stat_buffer.st_blocks * BL_SIZE);
-    printf("last file modification UTC+03:00:   %s", ctime(&stat_buffer.st_mtime));
+    printf("last status change: %s", asctime(gmtime(&stat_buffer.st_ctime)));
+    printf("last access time : %s", asctime(gmtime(&stat_buffer.st_atime)));
+    printf("last modification time: %s", asctime(gmtime(&stat_buffer.st_mtime)));
     return 0;
 }
