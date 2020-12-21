@@ -68,8 +68,8 @@ int main(int argc, char *argv[])
                 return 49;
             }
             smb_written += (size_t)res;
-		}
-    i += lcl_buf_size;
+	}
+        i += lcl_buf_size;
     }
     if (fsync(fd2) == -1)
     {
