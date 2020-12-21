@@ -18,12 +18,24 @@ int main(int argc, char *argv[])
         perror("failed to open");
         return 43;
     }
-    dprintf(fd,"%s", argv[2]);
+    size_t len = strlen(argv[2]);
+    int cnt = dprintf(fd,"%s", argv[2]);
+    if (cnt == -1)
+    {
+	perror("failed to dprintf");
+	close(fd);
+	return 44;
+    }
+    else if (cnt < len)
+    {
+	perror("unsuccessful to write");
+	close(fd);
+	return 45;
+    }  
     if (close(fd) == -1)
     {
         perror("Unsucessful closing");
-        return 45;
+        return 46;
     }
-
     return 0;
 }
