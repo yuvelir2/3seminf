@@ -1,23 +1,22 @@
 #include <stdio.h>
-#include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>
 
-const char *dir_type(__uint8_t type)
+const char *dir_type(u_int8_t type)
 {
     switch (type)
     {
-    case DT_FIFO:   return "FIFO";                  break;
-    case DT_CHR:    return "CHARACTER SPECIAL";     break;
-    case DT_DIR:    return "DIRECTORY";             break;
-    case DT_BLK:    return "BLOCK SPECIAL";         break;
-    case DT_REG:    return "REGULAR";               break;
-    case DT_LNK:    return "SYMBOLIC LINK";         break;
-    case DT_SOCK:   return "SOCKET";                break;
-    case DT_WHT:    return "WHITEOUT";              break;
-    default: return "unknown?";                     break;
+    case DT_FIFO:   return "FIFO";
+    case DT_CHR:    return "CHARACTER SPECIAL";
+    case DT_DIR:    return "DIRECTORY";
+    case DT_BLK:    return "BLOCK SPECIAL";
+    case DT_REG:    return "REGULAR";
+    case DT_LNK:    return "SYMBOLIC LINK";
+    case DT_SOCK:   return "SOCKET";
+    case DT_WHT:    return "WHITEOUT";
+    default: return "unknown?";
     }
 }
 
@@ -26,14 +25,14 @@ const char *is_type(mode_t file_mode)
 
     switch (file_mode & S_IFMT)
     {
-    case S_IFBLK:  return "BLOCK SPECIAL";          break;
-    case S_IFCHR:  return "CHARACTER SPECIAL";      break;
-    case S_IFDIR:  return "DIRECTORY";              break;
-    case S_IFIFO:  return "FIFO";                   break;
-    case S_IFLNK:  return "SYMBOLIC LINK";          break;
-    case S_IFREG:  return "REGULAR";                break;
-    case S_IFSOCK: return "SOCKET";                 break;
-    default:       return "unkwown?";               break;
+    case S_IFBLK:  return "BLOCK SPECIAL";
+    case S_IFCHR:  return "CHARACTER SPECIAL";
+    case S_IFDIR:  return "DIRECTORY";
+    case S_IFIFO:  return "FIFO";
+    case S_IFLNK:  return "SYMBOLIC LINK";
+    case S_IFREG:  return "REGULAR";
+    case S_IFSOCK: return "SOCKET";
+    default:       return "unkwown?";
     }
 }
 
@@ -56,6 +55,7 @@ int main(int argc, char *argv[])
     struct stat stat_buf;
     while ((dir = readdir(dir_str)) != NULL)
     {
+        const char *type_str = "unknown";
         if (dir->d_type == DT_UNKNOWN)
         {
             if (lstat(dir->d_name, &stat_buf) == -1)
@@ -64,13 +64,13 @@ int main(int argc, char *argv[])
                 closedir(dir_str);
                 return 44;
             }
-            printf("%-20s", is_type(stat_buf.st_mode));
+            type_str = is_type(stat_buf.st_mode);
         }
         else
         {
-            printf("%-20s", dir_type(dir->d_type));
+            type_str = dir_type(dir->d_type);
         }
-        printf("%s\n", dir->d_name);
+        printf("%-20s %s\n", type_str, dir->d_name);
     }
     closedir(dir_str);
     return 0;
