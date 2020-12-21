@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 3)
     {
-        printf("Usage: %s source file target file\n", argv[0]);
+        printf("Usage: %s source target \n", argv[0]);
         return 42;
     }
     struct stat stat_buf;
@@ -67,8 +67,20 @@ int main(int argc, char *argv[])
             smb_written += (size_t)res;
         }
     }
-    fsync(fd2);
-    close(fd1);
-    close(fd2);
+    if (fsync(fd2) == -1)
+    {
+	perror("failed to fsync");
+	return 49;
+    }
+    if (close(fd1) == -1)
+    {
+	perror("failed to close source file");
+	return 50;
+    }
+    if (close(fd2) == -1)
+    {
+	perror("failed to close targer file");
+	return 51;
+    }
     return 0;
 }
