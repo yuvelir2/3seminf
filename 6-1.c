@@ -22,7 +22,6 @@ const char *dir_type(u_int8_t type)
 
 const char *is_type(mode_t file_mode)
 {
-
     switch (file_mode & S_IFMT)
     {
     case S_IFBLK:  return "BLOCK SPECIAL";
@@ -74,8 +73,8 @@ int main(int argc, char *argv[])
     }
     if (closedir(dir_str))
     {
-		perror("failed to close");
-		return 45;
+	perror("failed to close");
+	return 45;
     }
     return 0;
 }
